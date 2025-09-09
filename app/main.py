@@ -1,0 +1,18 @@
+from fastapi import FastAPI
+from app.routers import user, transaction, team, agent, appointment, contact, lead_analytics, invite, phone_campaign, email_campaign, linkdin_post, scheduled_content, whatsapp_connection
+
+app = FastAPI(title="Super Admin API")
+
+app.include_router(user.router, prefix="/super-admin")
+app.include_router(transaction.router, prefix="/super-admin")
+app.include_router(team.router, prefix="/super-admin")
+app.include_router(agent.router, prefix="/super-admin") 
+app.include_router(appointment.router, prefix="/super-admin")
+app.include_router(contact.router, prefix="/super-admin")
+app.include_router(lead_analytics.router, prefix="/super-admin")
+app.include_router(invite.router, prefix="/super-admin")
+app.include_router(phone_campaign.router, prefix="/super-admin")
+app.include_router(email_campaign.router, prefix="/super-admin")
+app.include_router(linkdin_post.router, prefix="/super-admin")
+app.include_router(scheduled_content.router, prefix="/super-admin")
+app.include_router(whatsapp_connection.router, prefix="/super-admin")

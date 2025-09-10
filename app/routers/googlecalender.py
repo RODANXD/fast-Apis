@@ -24,8 +24,8 @@ def read_google_calendar_connection(calendar_id: str, db: Session = Depends(get_
 def create_google_calendar_connection(connection: GoogleCalendarConnectionCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     # if tokens not provided in request, use authenticated user's stored tokens
     data = connection.dict(exclude_unset=True)
-    if not data.get('access_token') and getattr(current_user, 'accessToken', None):
-        data['access_token'] = current_user.accessToken
+    # if the request doesn't include tokens, fall back to the user's stored refresh token
+    # (we store only refreshToken on the user model per the DB schema)
     if not data.get('refresh_token') and getattr(current_user, 'refreshToken', None):
         data['refresh_token'] = current_user.refreshToken
     return curd.create_google_calendar_connection(db, GoogleCalendarConnectionCreate(**data))

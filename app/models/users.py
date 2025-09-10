@@ -26,7 +26,6 @@ class User(Base):
     subscriptionStatus = Column(String(50), nullable=True)
     subscriptionId = Column(String(100), nullable=True)
     refreshToken = Column(String(255), nullable=True)
-    accessToken = Column(String(255), nullable=True)
     isDeleted = Column(Boolean, default=False, nullable=True)
     otp = Column(String(6), nullable=True)
     subscriptionEndDate = Column(TIMESTAMP, nullable=True)
@@ -392,11 +391,16 @@ class HRChatHistory(Base):
 
 
 class InstagramConnectionDetails(Base):
-    __tablename__ = 'instagram_connection_details'
+    __tablename__ = "instagram_connection_details"
 
-    instagram_user_id = Column(String, primary_key=True)
+    instagram_user_id = Column(String, primary_key=True, index=True)
+    instagram_id = Column(String, nullable=False)
+    username = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    access_token = Column(String, nullable=False)
+    refresh_token = Column(String, nullable=True)
+    expiry_time = Column(TIMESTAMP, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    user = relationship("User", backref="instagram_connections", lazy="joined")
 
 
 class LinkedInConnectionDetails(Base):

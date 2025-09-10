@@ -6,9 +6,17 @@ class UserBase(BaseModel):
     email: str
     country: str | None
     role: str | None
+    phoneNumber: str | None = None
+    image: str | None = None
+    city: str | None = None
+    company: str | None = None
+    countryCode: str | None = None
+    subscriptionType: str | None = None
+
 
 class UserCreate(UserBase):
-    password: str
+    password: str | None = None
+
 
 class UserOut(UserBase):
     id: int

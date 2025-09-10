@@ -4,8 +4,6 @@ from app.curd.user import create_user, get_user, get_all_users, update_user, del
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.schema.user import UserCreate, UserOut
-from app.curd.user import create_user, get_user, get_all_users
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -20,16 +18,16 @@ def get_db():
         db.close()
 
 @router.post("/", response_model=UserOut)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user_api(user: UserCreate, db: Session = Depends(get_db)):
     return create_user(db, user)
 
 @router.get("/{user_id}", response_model=UserOut)
-def get_user(user_id: int, db: Session = Depends(get_db)):
+def get_user_api(user_id: int, db: Session = Depends(get_db)):
     return get_user(db, user_id)
 
 @router.get("/", response_model=list[UserOut])
-def list_users_api(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    return get_all_users(db, skip, limit)
+def list_users_api( db: Session = Depends(get_db)):
+    return get_all_users(db)
 
 @router.put("/{user_id}", response_model=UserOut)
 def update_user_api(user_id: int, user: UserCreate, db: Session = Depends(get_db)):

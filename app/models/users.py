@@ -9,12 +9,32 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     firstName = Column(String(50))
     lastName = Column(String(50))
-    email = Column(String(100), unique=True, index=True)
-    password = Column(String(255))
-    country = Column(String(50))
-    role = Column(String(20))
-    isDeleted = Column(Boolean, default=False)
-    created_at = Column(TIMESTAMP)
+    phoneNumber = Column(String(20), nullable=True)
+    image = Column(String(255), nullable=True)
+    email = Column(String(100), unique=True, index=True, nullable=False)
+    password = Column(String(255), nullable=True)
+    city = Column(String(30), nullable=True)
+    company = Column(String(50), nullable=True)
+    country = Column(String(50), nullable=True)
+    role = Column(String(20), nullable=True)
+    subscriptionType = Column(String(20), nullable=True)
+    countryCode = Column(String(20), nullable=True)
+    paymentId = Column(String(100), nullable=True)
+    activeProfile = Column(Boolean, nullable=True)
+    isProfileComplete = Column(Boolean, nullable=True)
+    stripeCustomerId = Column(String(50), nullable=True)
+    subscriptionStatus = Column(String(50), nullable=True)
+    subscriptionId = Column(String(100), nullable=True)
+    refreshToken = Column(String(255), nullable=True)
+    accessToken = Column(String(255), nullable=True)
+    isDeleted = Column(Boolean, default=False, nullable=True)
+    otp = Column(String(6), nullable=True)
+    subscriptionEndDate = Column(TIMESTAMP, nullable=True)
+    subscriptionStartDate = Column(TIMESTAMP, nullable=True)
+    subscriptionUpdatedAt = Column(TIMESTAMP, nullable=True)
+    language = Column(String, nullable=True)
+    created_at = Column(TIMESTAMP, nullable=True)
+    subscriptionDurationType = Column(String, nullable=True)
 
 class TransactionHistory(Base):
     __tablename__ = 'transaction_history'
@@ -48,11 +68,13 @@ class Teammembers(Base):
 
 class Team(Base):
     __tablename__ = 'team'
-
     id = Column(String, primary_key=True)
     userId = Column(Integer, nullable=True)
     numberOfTeamMembers = Column(Integer, nullable=True)
     credits = Column(Integer, nullable=True)
+    creditRenewDate = Column(Date, nullable=True)
+    numberOfRenewMonths = Column(Integer, nullable=True)
+    nextMonthRenewDate = Column(Date, nullable=True)
 
 
 class AgentPhoneNumber(Base):
@@ -277,3 +299,155 @@ class WhatsAppConnection(Base):
     expiry_time = Column(TIMESTAMP, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     user = relationship("User", backref="whatsapp_connections", lazy="joined")
+
+
+class AccountChatHistory(Base):
+    __tablename__ = 'account_chat_history'
+
+    id = Column(Integer, primary_key=True, index=True)
+    thread_id = Column(String, nullable=True)
+    chat_history = Column(ARRAY(JSONB), nullable=True)
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True)
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True)
+    user = relationship("User", backref="account_chat_history", lazy="joined")
+
+
+class AppointmentAgentLeads(Base):
+    __tablename__ = 'appointment_agent_leads'
+
+    id = Column(Integer, primary_key=True, index=True)
+    lead_id = Column(Integer, nullable=True)
+
+
+class CallRecord(Base):
+    __tablename__ = 'call_record'
+
+    id = Column(Integer, primary_key=True, index=True)
+    from_contact_number = Column(String, nullable=False)
+    contact_number = Column(String, nullable=False)
+    result = Column(String, nullable=False)
+    created_at = Column(String, nullable=True) 
+
+
+class Content(Base):
+    __tablename__ = 'content'
+
+    id = Column(Integer, primary_key=True, index=True)
+    text = Column(String, nullable=False)
+    post_type = Column(String, nullable=False)
+    language = Column(String, nullable=False)
+    media_type = Column(String, nullable=False)
+    video_duration = Column(String, nullable=True)
+    author = Column(String, nullable=True)
+    post_id = Column(String, nullable=False)
+    post_status = Column(String, nullable=True)
+    caption = Column(String, nullable=True)
+    media_urls = Column(ARRAY(JSONB), nullable=True)
+    created_at = Column(TIMESTAMP, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    # user = relationship("User", backref="contents", lazy="joined")
+
+
+class ContentCreationChatHistory(Base):
+    __tablename__ = "content_creation_chat_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    thread_id = Column(String, nullable=True)
+    chat_history = Column(ARRAY(JSONB), nullable=True)
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True)
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True)
+
+
+class GoogleCalendarConnectionDetails(Base):
+    __tablename__ = "google_calendar_connection_details"
+
+    # id = Column(Integer, primary_key=True, index=True)
+    calendar_id = Column(String, primary_key=True, index=True)
+    email = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    timezone = Column(String, nullable=False)
+    access_token = Column(String, nullable=False)
+    refresh_token = Column(String, nullable=False)
+    expiry_time = Column(TIMESTAMP, nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+
+
+class HRChatHistory(Base):
+    __tablename__ = "hr_chat_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    thread_id = Column(String, nullable=True)
+    chat_history = Column(ARRAY(JSONB), nullable=True)
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True)
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True)
+
+
+
+
+class InstagramConnectionDetails(Base):
+    __tablename__ = 'instagram_connection_details'
+
+    instagram_user_id = Column(String, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user = relationship("User", backref="instagram_connections", lazy="joined")
+
+
+class LinkedInConnectionDetails(Base):
+    __tablename__ = "linkedin_connection_details"
+
+    linkedin_id = Column(String, primary_key=True, index=True)
+    email = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    access_token = Column(String, nullable=False)
+    refresh_token = Column(String, nullable=True)
+
+
+class KnowledgeBase(Base):
+    __tablename__ = "knowledge_base"
+
+    id = Column(Integer, primary_key=True, index=True)
+    data = Column(String, nullable=True)
+    data_type = Column(String, nullable=True)
+    path = Column(String, nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+
+
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(100), nullable=False)
+    token = Column(String(255), nullable=False)
+    expiresAt = Column(TIMESTAMP, nullable=False)
+    created_at = Column(TIMESTAMP, nullable=True)
+
+class XPost(Base):
+    __tablename__ = "x_post"
+
+    id = Column(Integer, primary_key=True, index=True)
+    generated_content = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+    purpose = Column(String, nullable=False)
+    custom_instructions = Column(String, nullable=True)
+    prompt = Column(String, nullable=True)
+    created_at = Column(TIMESTAMP, nullable=False)
+    user = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+class YouTubeScript(Base):
+    __tablename__ = "youtube_script"
+
+    id = Column(Integer, primary_key=True, index=True)
+    generated_content = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+    custom_instructions = Column(String, nullable=True)
+    prompt = Column(String, nullable=True)
+    created_at = Column(TIMESTAMP, nullable=False)
+    user = Column(Integer, ForeignKey("users.id"), nullable=True)

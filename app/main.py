@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import user, transaction, team, agent, appointment, contact, lead_analytics, invite, phone_campaign, email_campaign, linkdin_post, scheduled_content, whatsapp_connection
+from app.routers import user, transaction, team, agent, appointment, contact, lead_analytics, invite, phone_campaign, email_campaign, linkdin_post, scheduled_content, whatsapp_connection, account_chat_history, appointment_agent, Callrecord , content, googlecalender, auth #, instagram_connection, linkedin_connection, knowledge_base, password_reset, x_post, youtube_script
 
 app = FastAPI(title="Super Admin API")
 
@@ -16,3 +16,15 @@ app.include_router(email_campaign.router, prefix="/super-admin")
 app.include_router(linkdin_post.router, prefix="/super-admin")
 app.include_router(scheduled_content.router, prefix="/super-admin")
 app.include_router(whatsapp_connection.router, prefix="/super-admin")
+app.include_router(account_chat_history.router, prefix="/super-admin")
+app.include_router(appointment_agent.router, prefix="/super-admin")
+app.include_router(Callrecord.router, prefix="/super-admin")
+app.include_router(content.router, prefix="/super-admin")
+app.include_router(googlecalender.router, prefix="/super-admin")
+app.include_router(auth.router)
+# app.include_router(instagram_connection.router, prefix="/super-admin")
+# app.include_router(linkedin_connection.router, prefix="/super-admin")
+# app.include_router(knowledge_base.router, prefix="/super-admin")
+# app.include_router(password_reset.router, prefix="/super-admin")
+# app.include_router(x_post.router, prefix="/super-admin")
+# app.include_router(youtube_script.router, prefix="/super-admin")
